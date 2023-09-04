@@ -17,6 +17,7 @@ export const signUpUser = async (req, res, next) => {
             console.log(hashedPass, 'hashedPass');
             const saveUser = new userModel({ name, email, password: hashedPass, blogs: [] });
             await saveUser.save();
+            const { password, createdAt, updatedAt, __v, ...others } = saveUser._doc
             console.log(saveUser, '---saveUser');
             // T O K E N
             const jwt = pkg
@@ -29,7 +30,7 @@ export const signUpUser = async (req, res, next) => {
                 { expiresIn: "24h" }
             );
             console.log(saveUser, '------newUser');
-            return res.status(200).json({ success: true, User: saveUser, Token: token, message: 'SignUp Successful' });
+            return res.status(200).json({ success: true, User: others, Token: token, message: 'SignUp Successful' });
         }
 
     } catch (error) {
@@ -42,6 +43,7 @@ export const signUpUser = async (req, res, next) => {
 export const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
+        console.log(req.body,'------body')
         const jwt = pkg;
         const User = await userModel.findOne({ email: email });
         if (User) {

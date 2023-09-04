@@ -6,7 +6,7 @@ export const getAllBlogs = async (req, res, next) => {
 
     try {
         console.log('blog get here')
-        let blogs = await blogModel.find();
+        let blogs = await blogModel.find().populate('userId','-password');
         console.log(blogs, '------blogs')
         if (blogs) {
             return res.status(200).json({ blogs, success: true, message: "All Blogs Found" })
@@ -84,11 +84,14 @@ export const deleteBlog = async (req, res) => {
 export const userBlogs = async (req, res, next) => {
     try {
         const userId = req.params.id
+        console.log(userId,'-----------blogssssssssssssssss')
         const userBlogs = await userModel.findById(userId).populate('blogs')
+        const { password, createdAt, updatedAt, __v, ...others } = userBlogs._doc
         if (!userBlogs) {
             return res.status(404).json({ message: 'No Blog Found' })
         }
-        return res.status(200).json({ success: true, blogs: userBlogs })
+        console.log(others,'----------------')
+        return res.status(200).json({ success: true, userBlogs: others })
     } catch (error) {
         console.log(error)
     }

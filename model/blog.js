@@ -1,29 +1,34 @@
 import mongoose from "mongoose";
+import moment from 'moment';
 
-const blogSchema =  mongoose.Schema ({
-    userId:{
+const blogSchema = mongoose.Schema({
+    userId: {
         type: mongoose.Types.ObjectId,
-        ref:"users",
-        required:true,
+        ref: "users",
+        required: true,
     },
-    category:{
+    category: {
         type: String,
-        required:true,
+        required: true,
     },
-    title:{
+    title: {
         type: String,
-        required:true,
+        required: true,
     },
-    description:{
+    description: {
         type: String,
-        required:true,
+        required: true,
     },
-    image:{
+    image: {
         type: String,
-        required:true,
+        required: true,
+    },
+    date: {
+        type: String,
+        default: moment().format('DD MMMM YYYY'),
     },
 },
-{ timestamps: true }
+    { timestamps: true }
 );
-var blogModel = mongoose.model("blog",blogSchema)
+var blogModel = mongoose.model("blog", blogSchema)
 export default blogModel;
